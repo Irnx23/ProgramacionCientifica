@@ -9,25 +9,29 @@
 using namespace std;
 
 int main() {
-    int N;
     bool primo=true;
     cout<<"Ingrese un número: ";
+    int N=0;
     cin>>N;
     if (N<=1){
         primo=false;
     }else{
         for (int i=2; i<=(N/2); i++){
+            //realizando operacion de manera directa en el if 
             if(N % i ==0){
+               //no es primo -- cambia valor a 0
                 primo=false;
                 break;
             }
         }
     }
+    //Revisar -- no es necesario especificar comparacion en el if
+    //if (primo == true)
     if(primo){
-        cout<<"El numero es primo "<<endl;
+        cout<<"El numero " << N << " es primo" <<endl;
         
     }else{
-        cout<<"el numero NO es primo "<<endl;
+        cout<<"El numero " << N << " NO es primo"<<endl;
     }
     
     return 0;
