@@ -3,6 +3,7 @@
 //  Activity5
 //
 //  Created by Itzel Robles on 19/02/23.
+// Revisado by Samantha Lopez
 //
 //Write  a  program  that  asks  the  user  to  type  all  the  integersbetween 8 and 23 (both included) using a while.
 
@@ -10,13 +11,14 @@
 using namespace std;
 
 int main() {
-    int A,i=8;
+    int A=0,i=8;
     while(i<24){
         cout<<"Ingresa el numero "<<i<<endl;
         cin>>A;
         if (A!=i){
             cout<<"error"<<endl;
-            break;
+            i--;
+            //Revisar: es necesario colocar break
         }
         i++;
     }
