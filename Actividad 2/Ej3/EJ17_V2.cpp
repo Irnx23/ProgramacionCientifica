@@ -9,7 +9,7 @@ int askforvalue(string VarName, int minval = 0); //Voy a usar una funcion con pa
 //double**genT(int,int); //Generar tabla de nxk dimensiones
 //void printTable(double**,int,int); //Imprimir las tablas con sus dimensiones
 void deleteTable(double**, int); //Funcion para eliminar tablas hechas
-int RAND(int, int); //Funci髇 random
+int RAND(int, int); //Funci贸n random
 void quicksort(double* , int , int );
 int dividir(double* , int , int );
 struct Rand2DArray; //Estructura para estrcutura
@@ -26,8 +26,8 @@ struct Rand2DArray { //Declaracion de la estructura con sus tipos de miembros
         N = n;
     }
     Rand2DArray(int N, int K) { //Constructor
-        array = new double* [N]; //Declaraci髇 de puntero vacio a otro puntero.
-        dim = new double[N]; //Declaraci髇 de un puntero a una lista.
+        array = new double* [N]; //Declaraci贸n de puntero vacio a otro puntero.
+        dim = new double[N]; //Declaraci贸n de un puntero a una lista.
         for (int i = 0; i < N; i++) { //For para generar las tablas
             cout << "Tabla " << i + 1 << ":";
             int r = RAND(10, K);
@@ -40,7 +40,7 @@ struct Rand2DArray { //Declaracion de la estructura con sus tipos de miembros
             cout << endl;
             //REALIZACION DE ORDENAMIENTO E IMPRESION A LA PAR DE QUE VA GENERANDO DICHAS TABLAS CON VALORES ALEATORIOS
             //*************************************REVISAR*****************************
-            quicksort(array[i], 0, r - 1); // llamada a la funci髇 quicksort para ordenar la tabla i
+            quicksort(array[i], 0, r - 1); // llamada a la funci贸n quicksort para ordenar la tabla i
             cout << "--------------------------\n" << endl;
             cout << "Tabla " << i + 1 << " ordenada:\n";
             for (int j = 0; j < r; j++) {
@@ -71,7 +71,7 @@ int main() {
 }
 //---------------------------------------------------------------------
 
-int askforvalue(string VarName, int minval) { //Funci髇 entera en donde pide la variable para regresar la variable entera.
+int askforvalue(string VarName, int minval) { //Funci贸n entera en donde pide la variable para regresar la variable entera.
     int var = 0;
     do {
         cout << "Ingresa " << VarName << ":";
@@ -82,7 +82,7 @@ int askforvalue(string VarName, int minval) { //Funci髇 entera en donde pide la 
 
 //-----------------------------------------------------------------------
 //double** genT(int N, int K){
-//    double** Array= new double*[N]; //Declaraci髇 de puntero vacio a otro puntero.
+//    double** Array= new double*[N]; //Declaraci贸n de puntero vacio a otro puntero.
 //    for(int i=0;i<N;i++){ //For para generar las tablas
 //        int r=RAND(10,K);
 //        Array[i]=new double[r];
