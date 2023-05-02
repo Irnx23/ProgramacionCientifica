@@ -1,4 +1,3 @@
-//
 //  main.cpp
 //  Proyecto
 //
@@ -7,91 +6,119 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib> // Para la función rand()
+#include <queue>
 #include <stack>
-#include <cstdlib>
-#include <ctime>
-
 using namespace std;
-//int num_nodes;
-//----------------------------ALGORITMO DE KOSARAJU----------------------------------------
-// "&Vct" es una referencia que apunta a un objeto para evitar copias inecesesarias
-// en dfs1 se ingresa un vector de vectores de tipo entero, un vector booleano, un stack y un nodo inicial
+//---------------------------------------------------------------------------------------------
+struct Nodo {
+    int id;
+    bool visitado;
+    vector<int>vecinos;
+};
+//----------------------------------------------------------------------------------------------
 
-
-void dfs1(vector<vector<int>>& Vct, vector<bool>& visitado, stack<int>& stck, int nodo) {
-    visitado[nodo] = true; //Dentro del vector booleano 'visitado' Marca el primer nodo como visitado
-    //cout<<"Nodo visitado: "<<nodo<<endl;
-    for(int i=0; i<Vct[nodo].size(); i++) { //Recorre el tamaño del vector de vectores adj
-        int vecino = Vct[nodo][i]; //Declara un entero y toma el valor de i en el vector de vectores
-       // cout <<"Nodo vecino: "<<vecino<<endl;
-        if(!visitado[vecino]) // Verifica que el nodo adyacente al nodo inicial no ha sido visitado
-            dfs1(Vct, visitado, stck, vecino); //Función recursiva
+struct DirectedEdge {
+    int from;
+    int to;
+    // Otros atributos del arco dirigido
+};
+//----------------------------------------------------------------------------------------------
+int num_nodos;
+vector<Nodo> nodos; // Vector nodes de tipo 'Node' (es la estructura Node)
+vector<DirectedEdge> edges; //Vector edges de tipo 'DirectEdge'
+//---------------------------------------------------------------------------------------------
+void printNodos() {
+    cout << "Nodos del grafo:" << endl;
+    for (int i = 0; i < num_nodos; i++) {
+        cout << nodos[i].id << " ";
     }
-    stck.push(nodo); //Apila el nodo a el stack st
+    cout << endl;
 }
-
-void dfs2(vector<vector<int>>& Vct, vector<bool>& visitado, vector<int>& vect, int nodo) {
-    visitado[nodo] = true;
-    vect.push_back(nodo); //
-    for(int i=0; i<Vct[nodo].size(); i++) {
-        int vecino = Vct[nodo][i];
-        if(!visitado[vecino])
-            dfs2(Vct, visitado, vect, vecino);
+//----------------------------------------------------------------------------------------------
+void printEdges() {
+    cout << "Arcos dirigidos del grafo:" << endl;
+    //cout << edges[i].from;
+    for (int i = 0; i < edges.size(); i++) {
+        cout << edges[i].from << "->" << edges[i].to<<endl;
+        //cout << "->" << edges[i].to;//edges[i].from << "->" << edges[i].to;
     }
 }
-//---------------------------------------------------------------------------------------
-vector<vector<int>> kosaraju(vector<vector<int>>& Vct) {
-    double n = Vct.size();
-    vector<bool> visited(n, false);
-    stack<int> stk;
-
-// Primera fase: hacer un dfs desde cada nodo y agregarlo a una pila
-    for(int i=0; i<n; i++) {
-        if(!visited[i])
-            dfs1(Vct, visited, stk, i);
-    }
-
-// Segunda fase: invertir el grafo
-    vector<vector<int>> inv_Vct(n);
-    for(int i=0; i<n; i++) {
-        for(int j=0; j<Vct[i].size(); j++) {
-            inv_Vct[Vct[i][j]].push_back(i);
-        }
-    }
-
-// Tercera fase: hacer un dfs desde la pila y encontrar componentes fuertemente conectadas
-    vector<vector<int>> scc;
-    fill(visited.begin(), visited.end(), false); //llena una vector desde el begin hasta el end de "false"
-    while(!stk.empty()) {
-        int node = stk.top();
-        stk.pop();
-        if(!visited[node]) {
-            vector<int> stk_inv;
-            dfs2(inv_Vct, visited, stk_inv, node);
-            scc.push_back(stk_inv);
-        }
-    }
-
-    return scc;
-}
-
-
-
-//--------------------------------------------------------------------------------------------
-void conexiones(vector<vector<int>>& a){
-    double b=a.size();
-    for(int i=0;i<b;i++){
-        for(int j=0;j<b;j++){
-            if(i != j){
-                
+//----------------------------------------------------------------------------------------------
+void DFS(int s){
+    vector<bool> visitado(num_nodos,false);
+    stack<int>cola;
+    int a=0;
+    
+    visitado[s]=true;
+    cola.push(s);
+    while (!cola.empty()) {
+            int nodo = cola.top();
+            //if(s!=nodo){
+            cout << nodo << " -> ";
+            cola.pop();
+     
+            for (DirectedEdge edge : edges) {
+                if (edge.from == nodo && !visitado[edge.to]) {
+                    visitado[edge.to] = true;
+                    cola.push(edge.to);
+                    //cout<<edge.to<<endl;
+                }
             }
+        a=a+1;
+            //}
         }
+    cout<<endl;
+   // cout<< "Numero de nodos: "<<a<<endl;
+    int b=num_nodos;
+    if (a == b) {
+        cout<<"El nodo esta fuertemente conexo con todos los demás nodos."<<endl;
+    }else{
+        cout<<"El nodo no esta fuertemente conexo"<<endl;
+    }
+    }
+//----------------------ALGORITMO PARA FUERTEMENTE CONEXO --------------------------------
+void dfs1(int n, stack<int>&pila){
+    nodos[n].visitado=true;
+    for( int vecino:nodos[n].vecinos){
+        if(!nodos[vecino].visitado){
+            dfs1(vecino,pila);
+        }
+    }
+    pila.push(n);
+}
+
+vector<Nodo>transpuestos(num_nodos);
+vector<DirectedEdge> edges_transpuestos;
+
+for(const DirectedEdge &arco:edges){
+    int nodo_origen=arco.to;
+    int nodo_destino=arco.from;
+    transpuestos[nodo_origen].vecinos.push_back(nodo_destino);
+    edges_transpuestos.push_back({nodo_origen,nodo_destino});
+}
+
+
+void dfs2(int n, vector<int> &comp_actual){
+    transpuestos[n].visitado=true;
+    comp_actual.push_back(n);
+    for(int vecino: transpuestos[n].vecinos){
+        if(!transpuestos[vecino].visitado){
+            dfs2(vecino,comp_actual);
+        }
+    }
+}
+
+vector<vector<int>> comp_fuerte_conex;
+while(!pila.empty()){
+    int nodo=pila.top();
+    pila.pop();
+    if(!transpuestos[nodo].visitado){
         
     }
 }
-
-
+    
 //----------------------------------------------------------------------------------------------
+
 int main() {
     int n = 0; // Número de nodos
     cout<<"Ingresa el números de nodos: ";
@@ -100,75 +127,51 @@ int main() {
     do{
         cout<<"Ingresa la probabilidad de conectividad: ";
         cin>>prob;}while (0<prob<1);
-    //-------------------------- Genera las conexiones en los nodos -------------------------
+
+    num_nodos = n;
+    nodos.resize(n);
     
-    vector<vector<int>>adj(n); // HAY QUE UTILIZAR ESTE VECTOR PARA HACER LAS CONEXIONES FALTANTES
-    vector<vector<int>> adj_(n);
     for (int i = 0; i < n; i++) {
-        cout<<"Nodo: "<<i;
+        nodos[i].id = i;
+    }
+
+    for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             if (i != j) {
                 double r = ((double) rand() / RAND_MAX); // Generar un número aleatorio entre 0 y 1
                 if (r <= prob) {
-                    adj[i].push_back(j); //Vector de conexiones
-                     cout<<" -> "<<j;
-                }else{adj_[i].push_back(j); //Vector de NO conexiones
-                    // cout<<" / " <<j<<" ";
+                    DirectedEdge edge; //Vector Direc Edg.. con nombre edge
+                    edge.from = i;
+                    edge.to = j;
+                    edges.push_back(edge); // Añadir el arco dirigido al vector de arcos
+                    nodos[i].vecinos.push_back(j);
                 }
                 
             }
         }
-        cout<<endl;
     }
     
-    //-----------------------------------------------------------------------------------------------
-    cout<<"-------------------------------------"<<endl;
-    vector<vector<int>> vector_fuerte = kosaraju(adj);
-    double b=vector_fuerte.size();
-    for(int i=0; i<vector_fuerte.size(); i++) {
-        cout << "Componente " << i+1 << ": ";
-        for(int j=0; j<vector_fuerte[i].size(); j++){
-            cout << vector_fuerte[i][j] << "  ";
-        }
-        cout<<endl;
+    //printNodos();
+    //printEdges();
+    int a=0;
+    cout<<"Ingresa el nodo a explorar: ";
+    cin >>a;
+    
+    DFS(a);
+    stak<int> stk;
+    
+    DirectedEdge edge;
+    edge.from=a;
+    cout<<"A: "<<a<<endl;
+    
+    for(int j=0;j<=edges.size();j++){
+        if(a==edges[j].from){
+            cout<<"Nodo adyacente: "<<edges[j].to<<endl;
+        }else{ cout<<" ";}
     }
     
-    cout<<"-------------------------------------"<<endl;
-    bool estado=false;
     
-    if (b>1){
-        cout<<"Hay "<<b<<" componentes" <<endl;
-        estado=true;
-        
-    }else{
-        cout<<"Solo hay una componente"<<endl;
-    }
-
-        int max=0;
-        int j=-1;
-        for (int i=0;i < adj_.size(); i++) { // "adj_" tiene como size el numero de nodos ingresados
-            double x=adj_[i].size();
-            //cout<<"El nodo: "<<i<<" tiene: "<<x<<" ";
-            if(x>max){
-                max=x;
-                j=i;
-            }
-        }
-        if (j != -1){
-            cout <<"Nodo con menor conexiones "<<j<<endl;
-            double m=adj[j].size();
-            cout<<"Largo de: "<<m<<endl;
-            cout<<"Sus conexiones son: ";
-            for(int k=0;k<adj[j].size();k++){
-                cout<<adj[j][k]<<" ";
-            }
-            cout<<endl;
-        }
-    
-    do{
-        
-    }while(estado=true);
-
     return 0;
 }
+//----------------------------------------------------------------------------------------------
 
