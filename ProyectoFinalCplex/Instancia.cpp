@@ -7,8 +7,6 @@
 
 #include "Instancia.hpp"
 #include <vector>
-typedef IloArray<IloBoolVarArray> BoolVarMatrix;
-
 Instance::Instance(int n, string filename){
     _n=n;
     _filename=filename;
